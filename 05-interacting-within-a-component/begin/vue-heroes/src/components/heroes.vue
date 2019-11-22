@@ -27,7 +27,7 @@
       <div class="column is-4" v-if="selectedHero">
         <div class="card">
           <header class="card-header">
-            <p class="card-header-title">{{ selectedHero.firstName }}</p>
+            <p class="card-header-title">{{ fullName }}</p>
           </header>
           <div class="card-content">
             <div class="content">
@@ -61,6 +61,31 @@
                   v-model="selectedHero.description"
                 />
               </div>
+              <div class="field">
+                <label class="label" for="originDate">Origin Date</label>
+                <input
+                  class="input"
+                  id="originDate"
+                  v-model="selectedHero.originDate"
+                />
+              </div>
+              <div class="field">
+                <label class="label" for="capeCounter">cape Counter</label>
+                <input
+                  class="input"
+                  id="capeCounter"
+                  type="number"
+                  v-model="selectedHero.capeCounter"
+                />
+              </div>
+              <div class="field">
+                <label class="label" for="capeMessage">cape Message</label>
+                <label
+                  class="input"
+                  name="capeMessage">
+                  {{ capeMessage }}
+                </label>
+              </div>
             </div>
           </div>
           <footer class="card-footer">
@@ -88,30 +113,62 @@ const ourHeroes = [
     id: 10,
     firstName: 'Ella',
     lastName: 'Papa',
+    capeCounter: 1,
     description: 'fashionista',
   },
   {
     id: 20,
     firstName: 'Madelyn',
     lastName: 'Papa',
+    capeCounter: 3,
     description: 'the cat whisperer',
   },
   {
     id: 30,
     firstName: 'Haley',
     lastName: 'Papa',
+    capeCounter: 2,
     description: 'pen wielder',
   },
   {
     id: 40,
     firstName: 'Landon',
     lastName: 'Papa',
+    capeCounter: 0,
     description: 'arc trooper',
   },
 ];
 export default {
   name: 'Heroes',
+  data() {
+    return {
+      heroes: [],
+      selectedHero: undefined,
+      message: '',
+      capeMessage: '',
+    }
+  },
+  computed: {
+    fullName() {
+      return `${this.selectedHero.firstName} ${this.selectedHero.lastName}` 
+    } 
+  },
+  created(){
+    this.loadHeroes();
+  },
   methods: {
+    async getHeroes(){
+      return new Promise(resolve => {
+        setTimeout(() => resolve(ourHeroes), 1500);
+      });
+    },
+    async loadHeroes(){
+      this.heroes = [];
+      this.message = 'getting the heroes';
+      this.heroes = await this.getHeroes();
+      this.message = '';
+
+    },
     handleTheCapes(newValue) {
       const value = parseInt(newValue, 10);
       switch (value) {
@@ -140,6 +197,15 @@ export default {
     selectHero(hero) {
       this.selectedHero = hero;
     },
+  },
+  watch: {
+    'selectedHero.capeCounter': {
+      immediate: true,
+      handler(newValue, oldValue) {
+        console.log( `watcher evaluated old=${oldValue}, new=${newValue}` )
+        this.handleTheCapes(newValue)
+      }
+    }
   },
 };
 </script>
