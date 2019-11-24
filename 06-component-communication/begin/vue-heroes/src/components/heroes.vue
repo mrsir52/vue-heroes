@@ -31,7 +31,8 @@
           <!-- <heroes-list> -->
 
           <!-- <hero-detail> -->
-          <div v-if="selectedHero">
+            <HeroDetail />
+          <!-- <div v-if="selectedHero">
             <div class="card">
               <header class="card-header">
                 <p class="card-header-title">{{ fullName }}</p>
@@ -112,7 +113,7 @@
                 </button>
               </footer>
             </div>
-          </div>
+          </div> -->
           <!-- </hero-detail> -->
 
           <div class="notification is-info" v-show="message">{{ message }}</div>
@@ -123,10 +124,9 @@
 </template>
 
 <script>
+import HeroDetail from '@/components/hero-detail'
 import { format } from 'date-fns';
-
 import { displayDateFormat, ourHeroes } from '../shared';
-
 export default {
   name: 'Heroes',
   data() {
@@ -140,6 +140,7 @@ export default {
   created() {
     this.loadHeroes();
   },
+  components: { HeroDetail },
   computed: {
     fullName() {
       return this.selectedHero
